@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIZZA HUT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ed1c24;
+            --secondary-color: #006491;
+            --dark-color: #333;
+            --light-color: #f4f4f4;
+            --success-color: #28a745;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f8f8;
+            overflow-x: hidden;
+        }
+        
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            height: 60px;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 600;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.75rem;
+        }
+        
+        .hero {
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 0 1rem;
+            position: relative;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            animation: fadeInUp 1.2s ease;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: #c41019;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .categories {
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .categories h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+        
+        .categories-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .category {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            width: 200px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .category:hover {
+            transform: translateY(-10px);
+        }
+        
+        .category i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .category h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .menu {
+            padding: 2rem;
+            background-color: #f8f8f8;
+        }
+        
+        .menu h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+            text-align: center;
+        }
+        
+        .menu-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .menu-item {
+            flex: 0 0 auto;
+            width: 300px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .menu-item.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .menu-item:hover {
+            transform: translateY(-10px);
+        }
+        
+        .menu-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .menu-item-info {
+            padding: 1.5rem;
+        }
+        
+        .menu-item-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .menu-item-info .price {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .menu-item-info .description {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+        
+        .add-to-cart {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .add-to-cart:hover {
+            background-color: #00537a;
+        }
+        
+        .cart-modal {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background-color: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            transition: right 0.5s ease;
+            z-index: 1001;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .cart-modal.active {
+            right: 0;
+        }
+        
+        .cart-modal h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+        }
+        
+        .cart-items {
+            margin-bottom: 1.5rem;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 1rem;
+        }
+        
+        .cart-item-info {
+            flex: 1;
+        }
+        
+        .cart-item-info h3 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .cart-item-info .price {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+        
+        .quantity-btn {
+            background-color: #eee;
+            border: none;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        
+        .quantity {
+            margin: 0 0.5rem;
+        }
+        
+        .remove-item {
+            color: var(--primary-color);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+        
+        .remove-item:hover {
+            color: #c41019;
+        }
+        
+        .cart-total {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .checkout-btn:hover {
+            background-color: #c41019;
+        }
+        
+        .close-cart {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-color);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        .payment-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            z-index: 1002;
+            width: 500px;
+            max-width: 90%;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-modal.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .payment-modal h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var (--dark-color);
+        }
+        
+        .payment-form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        .card-details,
+        .upi-details {
+            display: none;
+        }
+        
+        .card-details.active,
+        .upi-details.active {
+            display: block;
+        }
+        
+        .payment-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .payment-option {
+            display: flex;
+            align-items: center;
+            background-color: #f4f4f4;
+            padding: 0.75rem;
+            border-radius: 5px;
+            width: calc(50% - 0.5rem);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .payment-option:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .payment-option input {
+            margin-right: 0.5rem;
+        }
+        
+        .payment-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .payment-btn:hover {
+            background-color: #c41019;
+        }
+        
+        .close-payment {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-color);
+        }
+        
+        .testimonials {
+    padding: 4rem 2rem;
+    background-color: #f8f8f8;
+    text-align: center;
+}
+
+.testimonials h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: var(--dark-color);
+}
+
+.testimonials-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.testimonial-slider {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.testimonial {
+    min-width: 300px;
+    margin: 0 1rem;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+}
+
+.testimonial p {
+    color: #666;
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.testimonial h4 {
+    color: var(--dark-color);
+    margin-bottom: 0.25rem;
+}
+
+.testimonial span {
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.slider-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.slider-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin: 0 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.slider-btn:hover {
+    background-color: #c41019;
+}
+
+.subscribe {
+    padding: 4rem 2rem;
+    background-color: var(--secondary-color);
+    color: white;
+    text-align: center;
+}
+
+.subscribe h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.subscribe p {
+    max-width: 600px;
+    margin: 0 auto 2rem;
+}
+
+.subscribe-form {
+    display: flex;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.subscribe-form input {
+    flex: 1;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 5px 0 0 5px;
+}
+
+.subscribe-form button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0 1.5rem;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.subscribe-form button:hover {
+    background-color: #c41019;
+}
+
+.footer {
+    background-color: var(--dark-color);
+    color: white;
+    padding: 3rem 2rem;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.footer-section h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.5rem;
+    width: 50px;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 0.75rem;
+}
+
+.footer-links a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+.social-links {
+    display: flex;
+    margin-top: 1rem;
+}
+
+.social-links a {
+    color: white;
+    background-color: #444;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 0.75rem;
+    transition: background-color 0.3s ease;
+}
+
+.social-links a:hover {
+    background-color: var(--primary-color);
+}
+
+.footer-bottom {
+    border-top: 1px solid #444;
+    padding-top: 1.5rem;
+    margin-top: 3rem;
+    text-align: center;
+    color: #999;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    
+    .nav-links {
+        margin-top: 1rem;
+    }
+    
+    .nav-links li {
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .categories-container {
+        gap: 1rem;
+    }
+    
+    .category {
+        width: 150px;
+    }
+    
+    .cart-modal {
+        width: 300px;
+    }
+    
+    .payment-option {
+        width: 100%;
+    }
+}
+
+/* Success Message */
+.success-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: var(--success-color);
+    color: white;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1003;
+    transform: translateX(150%);
+    transition: transform 0.5s ease;
+}
+
+.success-message.active {
+    transform: translateX(0);
+}
+
+/* Back to Top Button */
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+    z-index: 1004;
+}
+
+.back-to-top:hover {
+    background-color: #c41019;
+}
+    </style>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PIZZA HUT</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="icon" href="https://www.freepnglogos.com/uploads/pizza-hut-png-logo/pizza-hut-brands-png-logo-8.png" type="image/x-icon" />
+    </head>
+    <body>
+        <!-- Navigation -->
+        <nav class="navbar">
+            <img src="https://cdn.freebiesupply.com/logos/large/2x/pizza-hut-logo-png-transparent.png" alt="Pizza Hut Logo" class="logo">
+            <ul class="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#paymentModal">Payment Options</a></li> <!-- Added link to payment options -->
+                <li class="cart-icon" id="cartIcon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </li>
+            </ul>
+        </nav>
+    
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-slide active" style="background-image: url('https://mir-s3-cdn-cf.behance.net/projects/404/670b40170236041.Y3JvcCwxMzgwLDEwODAsMjcwLDA.jpg');">
+                <div class="hero-content">
+                    <h1>Delicious Pizza Delivered Fast</h1>
+                    <p>Enjoy the authentic taste of Pizza Hut's handcrafted pizzas made with fresh ingredients and our signature sauce.</p>
+                    <a href="#menu" class="btn">Order Now</a>
+                </div>
+            </div>
+            <div class="hero-slide" style="background-image: url('https://img.freepik.com/free-psd/food-menu-delicious-pizza-facebook-cover-banner-template_120329-4783.jpg');">
+                <div class="hero-content">
+                    <h1>Fresh Ingredients, Great Taste</h1>
+                    <p>Experience the freshness of our ingredients in every bite of our delicious pizzas.</p>
+                    <a href="#menu" class="btn">Order Now</a>
+                </div>
+            </div>
+            <div class="hero-slide" style="background-image: url('https://img.freepik.com/premium-vector/pizza-promotion-banner-design-template_693064-276.jpg?w=1800');">
+                <div class="hero-content">
+                    <h1>Special Offers Just for You</h1>
+                    <p>Don't miss out on our special offers and discounts. Order your favorite pizza today!</p>
+                    <a href="#menu" class="btn">Order Now</a>
+                </div>
+            </div>
+            <div class="hero-slide" style="background-image: url('https://cdn-assets.saveon.com/images/1671463134-banner.jpg');">
+                <div class="hero-content">
+                    <h1>Exclusive Deals</h1>
+                    <p>Grab our exclusive deals and enjoy your favorite pizzas at unbeatable prices.</p>
+                    <a href="#menu" class="btn">Order Now</a>
+                </div>
+            </div>
+            <div class="hero-slide" style="background-image: url('https://d1csarkz8obe9u.cloudfront.net/posterpreviews/pizza-long-banner-design-template-4c6d60464b0d6b6b27ca279e850cc68b_screen.jpg?ts=1621932699');">
+                <div class="hero-content">
+                    <h1>Family Feast</h1>
+                    <p>Enjoy a family feast with our special combo offers. Perfect for sharing!</p>
+                    <a href="#menu" class="btn">Order Now</a>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Categories -->
+        <section class="categories" id="about">
+            <h2>Our Categories</h2>
+            <div class="categories-container">
+                <div class="category">
+                    <i class="fas fa-pizza-slice"></i>
+                    <h3>Classic Pizzas</h3>
+                    <p>Timeless favorites</p>
+                </div>
+                <div class="category">
+                    <i class="fas fa-cheese"></i>
+                    <h3>Specialty Pizzas</h3>
+                    <p>Unique creations</p>
+                </div>
+                <div class="category">
+                    <i class="fas fa-drumstick-bite"></i>
+                    <h3>Non-Veg Pizzas</h3>
+                    <p>For meat lovers</p>
+                </div>
+                <div class="category">
+                    <i class="fas fa-leaf"></i>
+                    <h3>Veg Pizzas</h3>
+                    <p>Plant-based options</p>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Menu Section -->
+        <section class="menu" id="menu">
+            <h2>Our Pizza Menu</h2>
+            <div class="menu-container" id="menuContainer">
+                <!-- Menu items will be dynamically added here -->
+                <div class="menu-item active">
+                    <img src="https://tse4.mm.bing.net/th?id=OIP.xjX6cJP1TyGh9CKjD8eHxQHaDg&pid=Api&P=0&h=180" alt="Classic Pizza">
+                    <div class="menu-item-info">
+                        <h3>Classic Pizza</h3>
+                        <div class="price">₹299</div>
+                        <div class="description">A timeless favorite with cheese and tomato sauce.</div>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="menu-item active">
+                    <img src="https://tse3.mm.bing.net/th?id=OIP.IpDiF0kIvSgwf7qH8ovnUwHaER&pid=Api&P=0&h=180" alt="Specialty Pizza">
+                    <div class="menu-item-info">
+                        <h3>Specialty Pizza</h3>
+                        <div class="price">₹399</div>
+                        <div class="description">Unique creations with special ingredients.</div>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="menu-item active">
+                    <img src="https://tse2.mm.bing.net/th?id=OIP.U2hqisNZ0zddOfeP2G1OTAHaEo&pid=Api&P=0&h=180" alt="Non-Veg Pizza">
+                    <div class="menu-item-info">
+                        <h3>Non-Veg Pizza</h3>
+                        <div class="price">₹499</div>
+                        <div class="description">For meat lovers with a variety of toppings.</div>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="menu-item active">
+                    <img src="https://tse4.mm.bing.net/th?id=OIP.c8JfLutkGEBHVY0EBhMUswHaDc&pid=Api&P=0&h=180" alt="Veg Pizza">
+                    <div class="menu-item-info">
+                        <h3>Veg Pizza</h3>
+                        <div class="price">₹349</div>
+                        <div class="description">Plant-based options with fresh vegetables.</div>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                </div>
+                <!-- New items -->
+                <div class="menu-item active">
+                    <img src="https://tse4.mm.bing.net/th?id=OIP.eKRcna3P-uGZNTQWwxPNrwHaEK&pid=Api&P=0&h=180" alt="Cheese Burst Pizza">
+                    <div class="menu-item-info">
+                        <h3>Cheese Burst Pizza</h3>
+                        <div class="price">₹599</div>
+                        <div class="description">Loaded with extra cheese for a burst of flavor.</div>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="menu-item active">
+                    <img src="https://tse2.mm.bing.net/th?id=OIF.oFlSFCcdQJ5%2fQXDPCM%2b5jw&pid=Api&P=0&h=180" alt="Pepperoni Pizza">
+                    <div class="menu-item-info">
+                        <h3>Pepperoni Pizza</h3>
+                        <div class="price">₹699</div>
+                        <div class="description">A classic favorite topped with pepperoni slices.</div>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Testimonials -->
+        <section class="testimonials">
+            <h2>What Our Customers Say</h2>
+            <div class="testimonials-container">
+                <div class="testimonial-slider" id="testimonialSlider">
+                    <div class="testimonial">
+                        <img src="https://tse3.mm.bing.net/th?id=OIP.8UeIFPMYwIErE1ShRYB9QAHaEo&pid=Api&P=0&h=180" alt="Customer">
+                        <p>"Pizza Hut has the best cheese burst pizza I've ever tasted. Their delivery is always on time!"</p>
+                        <h4>Rohit Sharma</h4>
+                        <span>Delhi</span>
+                    </div>
+                    <div class="testimonial">
+                        <img src="https://tse1.mm.bing.net/th?id=OIP.chKreeatDAlZhufyGEap1QHaH6&pid=Api&P=0&h=180" alt="Customer">
+                        <p>"I love their paneer pizza. The quality is consistently good and the staff is friendly."</p>
+                        <h4>Priya Patel</h4>
+                        <span>Mumbai</span>
+                    </div>
+                    <div class="testimonial">
+                        <img src="https://tse1.mm.bing.net/th?id=OIP.9upU4--66ELuzm80oI7WtQHaE7&pid=Api&P=0&h=180" alt="Customer">
+                        <p>"The hot chicken pizza is my family's favorite. We order it every weekend!"</p>
+                        <h4>Amit Kumar</h4>
+                        <span>Bangalore</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-btn" id="prevBtn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="slider-btn" id="nextBtn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+    
+        <!-- Subscribe -->
+        <section class="subscribe" id="contact">
+            <h2>Get Special Offers</h2>
+            <p>Subscribe to our newsletter and get exclusive deals, new menu items, and special discounts delivered to your inbox.</p>
+            <div class="subscribe-form">
+                <input type="email" placeholder="Enter your email">
+                <button>Subscribe</button>
+            </div>
+        </section>
+    
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-section">
+                    <h3>Pizza Hut</h3>
+                    <p>Serving delicious pizzas since 1958. Our mission is to provide quality food and excellent service to our valued customers.</p>
+                    <div class="social-links">
+                        <a href="http://facebook.com/PizzaHut/"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://x.com/pizzahut"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/pizzahut_india/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/user/pizzahut/pizzahut/pizzahut"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#menu">Menu</a></li>
+                        <li><a href="https://www.uspizza.in/about-us">About Us</a></li>
+                        <li><a href="https://www.consumercomplaints.in/pizza-hut-india-b100227/customer-care">Contact</a></li>
+                        <li><a href="https://www.pizzahut.co.in/terms/">Terms & Conditions</a></li>
+                        <li><a href="https://www.pizzahut.com.cy/privacy-policy#:~:text=This%20policy%20sets%20out%20how%20we%2C%20as%20a,choices%20about%20our%20use%20of%20your%20personal%20information.">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Pizza hut food street, near vit ap</li>
+                        <li><i class="fas fa-phone"></i> +91 000000000</li>
+                        <li><i class="fas fa-envelope"></i> info@pizzahut.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Pizza Hut. All Rights Reserved.</p>
+            </div>
+        </footer>
+    
+        <!-- Cart Modal -->
+        <div class="cart-modal" id="cartModal">
+            <button class="close-cart" id="closeCart">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2>Your Cart</h2>
+            <div class="cart-items" id="cartItems">
+                <!-- Cart items will be dynamically added here -->
+            </div>
+            <div class="cart-total" id="cartTotal">
+                Total: ₹0
+            </div>
+            <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+        </div>
+    
+        <!-- Payment Modal -->
+        <div class="payment-modal" id="paymentModal">
+            <button class="close-payment" id="closePayment">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2>Payment Details</h2>
+            <form class="payment-form" id="paymentForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="adress">Delivery Address</label>
+                    <input type="text" id="address" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" id="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="payment">Payment Method</label>
+                    <div class="payment-options">
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="Credit Card" required>
+                            Credit Card
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="Debit Card" required>
+                            Debit Card
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="Net Banking" required>
+                            Net Banking
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="Cash on Delivery" required>
+                            Cash on Delivery
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="UPI" required>
+                            UPI
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group card-details" id="cardDetails" style="display: none;">
+                    <label for="cardNumber">Card Number</label>
+                    <input type="text" id="cardNumber" required>
+                    <label for="cardExpiry">Expiry Date</label>
+                    <input type="text" id="cardExpiry" placeholder="MM/YY" required>
+                    <label for="cardCVC">CVC</label>
+                    <input type="text" id="cardCVC" required>
+                </div>
+                <div class="form-group upi-details" id="upiDetails">
+                    <label for="upiId">UPI ID</label>
+                    <input type="text" id="upiId" placeholder="example@upi" required>
+                </div>
+                <button class="payment-btn" type="submit">Pay Now</button>
+            </form>
+        </div>
+
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage">
+            Payment Successful!
+        </div>
+
+        <!-- Overlay -->
+        <div class="overlay" id="overlay"></div>
+
+        <!-- Back to Top Button -->
+        <button class="back-to-top" id="backToTop">
+            <i class="fas fa-chevron-up"></i>
+        </button>
+
+        <script src="script.js"></script>
+        <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cartIcon = document.getElementById('cartIcon');
+        const cartModal = document.getElementById('cartModal');
+        const closeCart = document.getElementById('closeCart');
+        const overlay = document.getElementById('overlay');
+        const cartItems = document.getElementById('cartItems');
+        const cartCount = document.getElementById('cartCount');
+        const cartTotal = document.getElementById('cartTotal');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        const paymentModal = document.getElementById('paymentModal');
+        const closePayment = document.getElementById('closePayment');
+        const paymentForm = document.getElementById('paymentForm');
+        const successMessage = document.getElementById('successMessage');
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+        let cart = [];
+
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const item = e.target.closest('.menu-item');
+                const itemName = item.querySelector('h3').innerText;
+                const itemPrice = parseFloat(item.querySelector('.price').innerText.replace('₹', ''));
+                const itemImage = item.querySelector('img').src;
+
+                const cartItem = {
+                    name: itemName,
+                    price: itemPrice,
+                    image: itemImage,
+                    quantity: 1
+                };
+
+                addToCart(cartItem);
+            });
+        });
+
+        function addToCart(item) {
+            const existingItem = cart.find(cartItem => cartItem.name === item.name);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push(item);
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            cartItems.innerHTML = '';
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                const cartItemElement = document.createElement('div');
+                cartItemElement.classList.add('cart-item');
+                cartItemElement.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="cart-item-info">
+                        <h3>${item.name}</h3>
+                        <div class="price">₹${item.price}</div>
+                        <div class="cart-item-quantity">
+                            <button class="quantity-btn" onclick="decreaseQuantity('${item.name}')">-</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="quantity-btn" onclick="increaseQuantity('${item.name}')">+</button>
+                        </div>
+                    </div>
+                    <button class="remove-item" onclick="removeFromCart('${item.name}')">&times;</button>
+                `;
+                cartItems.appendChild(cartItemElement);
+            });
+            cartTotal.innerText = `Total: ₹${total}`;
+            cartCount.innerText = cart.length;
+        }
+
+        window.decreaseQuantity = (name) => {
+            const item = cart.find(cartItem => cartItem.name === name);
+            if (item.quantity > 1) {
+                item.quantity--;
+            } else {
+                cart = cart.filter(cartItem => cartItem.name !== name);
+            }
+            updateCart();
+        };
+
+        window.increaseQuantity = (name) => {
+            const item = cart.find(cartItem => cartItem.name === name);
+            item.quantity++;
+            updateCart();
+        };
+
+        window.removeFromCart = (name) => {
+            cart = cart.filter(cartItem => cartItem.name !== name);
+            updateCart();
+        };
+
+        cartIcon.addEventListener('click', () => {
+            cartModal.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        closeCart.addEventListener('click', () => {
+            cartModal.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        checkoutBtn.addEventListener('click', () => {
+            cartModal.classList.remove('active');
+            paymentModal.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        closePayment.addEventListener('click', () => {
+            paymentModal.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        const paymentOptions = document.querySelectorAll('input[name="payment"]');
+        const cardDetails = document.getElementById('cardDetails');
+        const upiDetails = document.getElementById('upiDetails');
+
+        paymentOptions.forEach(option => {
+            option.addEventListener('change', (e) => {
+                if (e.target.value === 'Credit Card' || e.target.value === 'Debit Card') {
+                    cardDetails.style.display = 'block';
+                    upiDetails.style.display = 'none';
+                } else if (e.target.value === 'UPI') {
+                    upiDetails.style.display = 'block';
+                    cardDetails.style.display = 'none';
+                } else {
+                    cardDetails.style.display = 'none';
+                    upiDetails.style.display = 'none';
+                }
+            });
+        });
+
+        paymentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const selectedPaymentMethod = document.querySelector('input[name="payment"]:checked').value;
+            if ((selectedPaymentMethod === 'Credit Card' || selectedPaymentMethod === 'Debit Card') && !validateCardDetails()) {
+                alert('Please enter valid card details.');
+                return;
+            }
+            if (selectedPaymentMethod === 'UPI' && !validateUpiDetails()) {
+                alert('Please enter a valid UPI ID.');
+                return;
+            }
+            completePayment();
+        });
+
+        function validateCardDetails() {
+            const cardNumber = document.getElementById('cardNumber').value;
+            const cardExpiry = document.getElementById('cardExpiry').value;
+            const cardCVC = document.getElementById('cardCVC').value;
+            return cardNumber && cardExpiry && cardCVC;
+        }
+
+        function validateUpiDetails() {
+            const upiId = document.getElementById('upiId').value;
+            return upiId;
+        }
+
+        function completePayment() {
+            paymentModal.classList.remove('active');
+            overlay.classList.remove('active');
+            successMessage.classList.add('active');
+            setTimeout(() => {
+                successMessage.classList.remove('active');
+                cart = [];
+                updateCart();
+            }, 3000);
+        }
+
+        const slides = document.querySelectorAll('.hero-slide');
+        let currentSlide = 0;
+
+        function showNextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        setInterval(showNextSlide, 5000); 
+
+        // Back to Top Button
+        const backToTopButton = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.style.display = 'flex';
+            } else {
+                backToTopButton.style.display = 'none';
+            }
+        });
+
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+</script>
+    </body>
+</html>
